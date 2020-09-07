@@ -40,6 +40,6 @@ class GroupRepository
     public function deleteGroup($group_id)
     {
         Group::find($group_id)->delete();
-        return 'Group Deleted!';
+        return response(['message' => 'Group Deleted!'], 200);
     }
 }

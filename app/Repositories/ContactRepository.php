@@ -40,7 +40,7 @@ class ContactRepository
     public function deleteContact($contact_id)
     {
         Contact::find($contact_id)->delete();
-        return 'Contact Deleted!';
+        return response(['message' => 'Contact Deleted!'], 200);
     }
 
 }

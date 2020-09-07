@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
 use App\Group;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 class GroupController extends Controller
@@ -13,16 +14,6 @@ class GroupController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
     {
         //
     }
@@ -48,18 +39,6 @@ class GroupController extends Controller
     public function show(Group $group)
     {
         $this->authorize('view', $group);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param \App\Group $group
-     * @return \Illuminate\Http\Response
-     * @throws \Illuminate\Auth\Access\AuthorizationException
-     */
-    public function edit(Group $group)
-    {
-        $this->authorize('update', $group);
     }
 
     /**

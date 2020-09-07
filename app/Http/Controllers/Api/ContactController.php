@@ -1,30 +1,23 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
-use App\Group;
+use App\Contact;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
-class GroupController extends Controller
+class ContactController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        $contacts = $request->user()->contacts;
+        return response()->json($contacts, 200);
     }
 
     /**
@@ -41,49 +34,37 @@ class GroupController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param \App\Group $group
+     * @param \App\Contact $contact
      * @return \Illuminate\Http\Response
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function show(Group $group)
+    public function show(Contact $contact)
     {
-        $this->authorize('view', $group);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param \App\Group $group
-     * @return \Illuminate\Http\Response
-     * @throws \Illuminate\Auth\Access\AuthorizationException
-     */
-    public function edit(Group $group)
-    {
-        $this->authorize('update', $group);
+        $this->authorize('view', $contact);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param \Illuminate\Http\Request $request
-     * @param \App\Group $group
+     * @param \App\Contact $contact
      * @return \Illuminate\Http\Response
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function update(Request $request, Group $group)
+    public function update(Request $request, Contact $contact)
     {
-        $this->authorize('update', $group);
+        $this->authorize('update', $contact);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param \App\Group $group
+     * @param \App\Contact $contact
      * @return \Illuminate\Http\Response
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function destroy(Group $group)
+    public function destroy(Contact $contact)
     {
-        $this->authorize('delete', $group);
+        $this->authorize('delete', $contact);
     }
 }

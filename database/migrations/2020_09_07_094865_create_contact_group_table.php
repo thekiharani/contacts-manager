@@ -14,12 +14,11 @@ class CreateContactGroupTable extends Migration
     public function up()
     {
         Schema::create('contact_group', function (Blueprint $table) {
-            $table->id();
             $table->foreignId('contact_id');
             $table->foreignId('group_id');
             $table->timestamps();
 
-            $table->unique(['contact_id', 'group_id']);
+            $table->primary(['contact_id', 'group_id']);
             $table->foreign('contact_id')
                     ->references('id')
                     ->on('contacts')
