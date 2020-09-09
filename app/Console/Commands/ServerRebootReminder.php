@@ -4,7 +4,6 @@ namespace App\Console\Commands;
 
 use App\Contact;
 use App\Services\MessageService;
-use App\User;
 use Illuminate\Console\Command;
 
 class ServerRebootReminder extends Command
