@@ -19,16 +19,20 @@ class MessageService
 
     public function sendSMS($contacts, $message)
     {
-        $AT       = new AfricasTalking($this->username, $this->apiKey);
-        // Get one of the services
-        $sms      = $AT->sms();
-        // Use the service
-        $result   = $sms->send([
-            'to'      => $contacts,
-            'message' => $message
-        ]);
+        try {
+            $AT       = new AfricasTalking($this->username, $this->apiKey);
+            // Get one of the services
+            $sms      = $AT->sms();
+            // Use the service
+            $result   = $sms->send([
+                'to'      => $contacts,
+                'message' => $message
+            ]);
 
-        Log::info((string)json_encode(['AT SMS' => $result]));
-        return $result;
+            Log::info((string)json_encode(['AT SMS' => $result]));
+            return $result;
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 }

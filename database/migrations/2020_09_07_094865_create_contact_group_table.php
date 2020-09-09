@@ -16,7 +16,7 @@ class CreateContactGroupTable extends Migration
         Schema::create('contact_group', function (Blueprint $table) {
             $table->foreignId('contact_id');
             $table->foreignId('group_id');
-            $table->timestamps();
+            $table->timestamp('created_at')->useCurrent();
 
             $table->primary(['contact_id', 'group_id']);
             $table->foreign('contact_id')

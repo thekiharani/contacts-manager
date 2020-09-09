@@ -1977,6 +1977,57 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ContactList.vue?vue&type=script&lang=js&":
+/*!**********************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ContactList.vue?vue&type=script&lang=js& ***!
+  \**********************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: "ContactList",
+  props: {
+    contacts: {
+      type: Array
+    },
+    checkedContacts: {
+      type: Array
+    },
+    action: {
+      type: String
+    }
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/GroupForm.vue?vue&type=script&lang=js&":
 /*!********************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/GroupForm.vue?vue&type=script&lang=js& ***!
@@ -2003,10 +2054,16 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "GroupForm",
   props: {
     formAction: {
+      type: Function
+    },
+    cancel: {
       type: Function
     },
     formData: {
@@ -2030,6 +2087,7 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_ContactForm__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../components/ContactForm */ "./resources/js/components/ContactForm.vue");
+/* harmony import */ var _components_ContactList__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/ContactList */ "./resources/js/components/ContactList.vue");
 //
 //
 //
@@ -2115,6 +2173,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
@@ -2173,13 +2232,40 @@ __webpack_require__.r(__webpack_exports__);
       var _this4 = this;
 
       axios.post('/api/personal_sms', {
-        'contacts': this.checkedContacts,
+        'group': this.group,
         'message': this.message_body
       }).then(function (response) {
         console.log(response);
         _this4.action = '';
         _this4.checkedContacts = [];
         _this4.message_body = '';
+      });
+    },
+    attachGroupContacts: function attachGroupContacts() {
+      var _this5 = this;
+
+      axios.post('/api/group_contacts', {
+        'contacts': this.checkedContacts,
+        'group': this.group
+      }).then(function (response) {
+        console.log(response);
+        _this5.action = '';
+        _this5.checkedContacts = [];
+        _this5.group = '';
+      });
+    },
+    deleteContacts: function deleteContacts() {
+      var _this6 = this;
+
+      // Can't do delete since an array is passed as a param
+      axios.post('/api/delete_contacts', {
+        'contacts': this.checkedContacts
+      }).then(function (response) {
+        console.log(response);
+        _this6.action = '';
+        _this6.checkedContacts = [];
+
+        _this6.getContacts();
       });
     },
     getAction: function getAction(e) {
@@ -2295,6 +2381,80 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
@@ -2302,7 +2462,13 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
+      action: '',
+      store: false,
+      checkedGroups: [],
+      checkedContacts: [],
       groups: [],
+      contacts: [],
+      message_body: '',
       formData: {
         name: '',
         description: ''
@@ -2321,17 +2487,76 @@ __webpack_require__.r(__webpack_exports__);
         _this.groups = response.data;
       });
     },
-    addGroup: function addGroup() {
+    getContacts: function getContacts() {
       var _this2 = this;
+
+      axios.get('/api/contacts').then(function (response) {
+        console.log(response);
+        _this2.contacts = response.data;
+      });
+    },
+    storeGroup: function storeGroup() {
+      var _this3 = this;
 
       axios.post('/api/groups', this.formData).then(function (response) {
         console.log(response);
 
-        _this2.groups.unshift(response.data.group);
+        _this3.groups.unshift(response.data.group);
 
-        _this2.formData.name = '';
-        _this2.formData.description = '';
+        _this3.formData.name = '';
+        _this3.formData.description = '';
+        _this3.store = false;
       });
+    },
+    sendGroupSms: function sendGroupSms() {
+      var _this4 = this;
+
+      axios.post('/api/group_sms', {
+        'groups': this.checkedGroups,
+        'message': this.message_body
+      }).then(function (response) {
+        console.log(response);
+        _this4.action = '';
+        _this4.checkedContacts = [];
+        _this4.message_body = '';
+      });
+    },
+    attachContactsGroups: function attachContactsGroups() {
+      var _this5 = this;
+
+      axios.post('/api/contacts_groups', {
+        'contacts': this.checkedContacts,
+        'groups': this.checkedGroups
+      }).then(function (response) {
+        console.log(response);
+        _this5.action = '';
+        _this5.checkedContacts = [];
+        _this5.checkedGroups = [];
+      });
+    },
+    deleteGroups: function deleteGroups() {
+      var _this6 = this;
+
+      // Can't do delete since an array is passed as a param
+      axios.post('/api/delete_groups', {
+        'groups': this.checkedGroups
+      }).then(function (response) {
+        console.log(response);
+        _this6.action = '';
+        _this6.checkedGroups = [];
+
+        _this6.getGroups();
+      });
+    },
+    getAction: function getAction(e) {
+      this.checkedGroups = [];
+      this.action = e.target.value;
+
+      if (e.target.value === 'add_contacts') {
+        this.getContacts();
+      }
+
+      console.log(e.target.value);
     }
   }
 });
@@ -38116,6 +38341,121 @@ render._withStripped = true
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ContactList.vue?vue&type=template&id=0ee8d67a&":
+/*!**************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ContactList.vue?vue&type=template&id=0ee8d67a& ***!
+  \**************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("table", { staticClass: "table table-bordered" }, [
+    _vm._m(0),
+    _vm._v(" "),
+    _c(
+      "tbody",
+      _vm._l(_vm.contacts, function(contact, i) {
+        return _c("tr", { key: i + "-" + contact.id }, [
+          _c("td", [
+            _c("div", { staticClass: "form-check text-center" }, [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.checkedContacts,
+                    expression: "checkedContacts"
+                  }
+                ],
+                attrs: {
+                  id: contact.id,
+                  name: "checked_contacts",
+                  type: "checkbox"
+                },
+                domProps: {
+                  value:
+                    _vm.action === "send_message"
+                      ? contact.phone_number
+                      : contact.id,
+                  checked: Array.isArray(_vm.checkedContacts)
+                    ? _vm._i(
+                        _vm.checkedContacts,
+                        _vm.action === "send_message"
+                          ? contact.phone_number
+                          : contact.id
+                      ) > -1
+                    : _vm.checkedContacts
+                },
+                on: {
+                  change: function($event) {
+                    var $$a = _vm.checkedContacts,
+                      $$el = $event.target,
+                      $$c = $$el.checked ? true : false
+                    if (Array.isArray($$a)) {
+                      var $$v =
+                          _vm.action === "send_message"
+                            ? contact.phone_number
+                            : contact.id,
+                        $$i = _vm._i($$a, $$v)
+                      if ($$el.checked) {
+                        $$i < 0 && (_vm.checkedContacts = $$a.concat([$$v]))
+                      } else {
+                        $$i > -1 &&
+                          (_vm.checkedContacts = $$a
+                            .slice(0, $$i)
+                            .concat($$a.slice($$i + 1)))
+                      }
+                    } else {
+                      _vm.checkedContacts = $$c
+                    }
+                  }
+                }
+              })
+            ])
+          ]),
+          _vm._v(" "),
+          _c("td", [_vm._v(_vm._s(contact.name))]),
+          _vm._v(" "),
+          _c("td", [_vm._v(_vm._s(contact.phone_number))]),
+          _vm._v(" "),
+          _c("td", [_vm._v(_vm._s(contact.date_created))])
+        ])
+      }),
+      0
+    )
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", [
+        _c("th", [_vm._v("Select")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Name")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Phone Number")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Date Created")])
+      ])
+    ])
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/GroupForm.vue?vue&type=template&id=7761bef0&":
 /*!************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/GroupForm.vue?vue&type=template&id=7761bef0& ***!
@@ -38147,7 +38487,7 @@ var render = function() {
         }
       },
       [
-        _c("div", { staticClass: "col-lg-5" }, [
+        _c("div", { staticClass: "col-lg-4" }, [
           _c("input", {
             directives: [
               {
@@ -38176,7 +38516,7 @@ var render = function() {
           })
         ]),
         _vm._v(" "),
-        _c("div", { staticClass: "col-lg-5" }, [
+        _c("div", { staticClass: "col-lg-4" }, [
           _c("input", {
             directives: [
               {
@@ -38205,7 +38545,19 @@ var render = function() {
           })
         ]),
         _vm._v(" "),
-        _vm._m(0)
+        _vm._m(0),
+        _vm._v(" "),
+        _c("div", { staticClass: "col-lg-2" }, [
+          _c(
+            "button",
+            {
+              staticClass: "btn btn-danger btn-block",
+              attrs: { type: "button" },
+              on: { click: _vm.cancel }
+            },
+            [_vm._v("Cancel")]
+          )
+        ])
       ]
     )
   ])
@@ -38258,7 +38610,8 @@ var render = function() {
               attrs: {
                 formAction: _vm.storeContact,
                 cancel: function() {
-                  return (_vm.store = false)
+                  _vm.store = false
+                  _vm.action = ""
                 },
                 formData: _vm.formData,
                 title: "New Contact"
@@ -38335,7 +38688,10 @@ var render = function() {
                     ? _c("div", { staticClass: "col-lg-3" }, [
                         _c(
                           "button",
-                          { staticClass: "btn btn-danger btn-block" },
+                          {
+                            staticClass: "btn btn-danger btn-block",
+                            on: { click: _vm.deleteContacts }
+                          },
                           [_vm._v("Delete")]
                         )
                       ])
@@ -38543,7 +38899,10 @@ var render = function() {
                   _vm._v(" "),
                   _c(
                     "button",
-                    { staticClass: "btn btn-primary btn-block mt-3" },
+                    {
+                      staticClass: "btn btn-primary btn-block mt-3",
+                      on: { click: _vm.attachGroupContacts }
+                    },
                     [_vm._v("Add Contacts")]
                   )
                 ])
@@ -38705,68 +39064,394 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    { staticClass: "table-responsive" },
-    [
-      _c("p", { staticClass: "h3 text-center" }, [_vm._v("My Groups")]),
-      _vm._v(" "),
-      _c("GroupForm", {
-        attrs: {
-          formAction: _vm.addGroup,
-          formData: _vm.formData,
-          title: "New Group"
-        }
-      }),
-      _vm._v(" "),
-      _c("hr"),
-      _vm._v(" "),
-      _c("table", { staticClass: "table table-bordered" }, [
-        _vm._m(0),
-        _vm._v(" "),
-        _c(
-          "tbody",
-          _vm._l(_vm.groups, function(group) {
-            return _c("tr", { key: group.id }, [
-              _c("td", [_vm._v(_vm._s(group.name))]),
-              _vm._v(" "),
-              _c("td", [_vm._v(_vm._s(group.date_created))]),
-              _vm._v(" "),
-              _c(
-                "td",
-                [
-                  _c(
-                    "router-link",
-                    {
-                      staticClass: "btn btn-primary",
-                      attrs: { to: "group_message" }
-                    },
-                    [_vm._v("Send Message")]
-                  )
-                ],
-                1
-              )
-            ])
-          }),
-          0
+  return _c("div", { staticClass: "table-responsive" }, [
+    _c("p", { staticClass: "h3 text-center" }, [_vm._v("My Groups")]),
+    _vm._v(" "),
+    _vm.store || !_vm.groups.length
+      ? _c(
+          "div",
+          [
+            _c("GroupForm", {
+              attrs: {
+                formAction: _vm.storeGroup,
+                cancel: function() {
+                  _vm.store = false
+                  _vm.action = ""
+                },
+                formData: _vm.formData,
+                title: "New Group"
+              }
+            })
+          ],
+          1
         )
-      ])
-    ],
-    1
-  )
+      : _vm._e(),
+    _vm._v(" "),
+    _vm.groups.length
+      ? _c("div", [
+          !_vm.store
+            ? _c("div", { staticClass: "form-group" }, [
+                _c("div", { staticClass: "row" }, [
+                  _vm._m(0),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col-lg-9" }, [
+                    _c(
+                      "select",
+                      {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.action,
+                            expression: "action"
+                          }
+                        ],
+                        staticClass: "form-control",
+                        attrs: { name: "action", id: "action" },
+                        on: {
+                          change: [
+                            function($event) {
+                              var $$selectedVal = Array.prototype.filter
+                                .call($event.target.options, function(o) {
+                                  return o.selected
+                                })
+                                .map(function(o) {
+                                  var val = "_value" in o ? o._value : o.value
+                                  return val
+                                })
+                              _vm.action = $event.target.multiple
+                                ? $$selectedVal
+                                : $$selectedVal[0]
+                            },
+                            function($event) {
+                              return _vm.getAction($event)
+                            }
+                          ]
+                        }
+                      },
+                      [
+                        _c("option", { attrs: { value: "" } }, [
+                          _vm._v("-- Select Action --")
+                        ]),
+                        _vm._v(" "),
+                        _c("option", { attrs: { value: "send_message" } }, [
+                          _vm._v("Send Message")
+                        ]),
+                        _vm._v(" "),
+                        _c("option", { attrs: { value: "add_contacts" } }, [
+                          _vm._v("Add to Contacts")
+                        ]),
+                        _vm._v(" "),
+                        _c("option", { attrs: { value: "delete" } }, [
+                          _vm._v("Delete")
+                        ])
+                      ]
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _vm.action === "delete" && _vm.checkedGroups.length
+                    ? _c("div", { staticClass: "col-lg-3" }, [
+                        _c(
+                          "button",
+                          {
+                            staticClass: "btn btn-danger btn-block",
+                            on: { click: _vm.deleteGroups }
+                          },
+                          [_vm._v("Delete")]
+                        )
+                      ])
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _vm.action === "" || !_vm.checkedGroups.length
+                    ? _c("div", { staticClass: "col-lg-3" }, [
+                        _c(
+                          "button",
+                          {
+                            staticClass: "btn btn-primary px-3",
+                            on: {
+                              click: function() {
+                                return (_vm.store = true)
+                              }
+                            }
+                          },
+                          [_vm._v("Add Group")]
+                        )
+                      ])
+                    : _vm._e()
+                ])
+              ])
+            : _vm._e(),
+          _vm._v(" "),
+          _c("table", { staticClass: "table table-bordered" }, [
+            _vm._m(1),
+            _vm._v(" "),
+            _c(
+              "tbody",
+              _vm._l(_vm.groups, function(group) {
+                return _c("tr", { key: group.id }, [
+                  _c("td", [
+                    _c("div", { staticClass: "form-check text-center" }, [
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.checkedGroups,
+                            expression: "checkedGroups"
+                          }
+                        ],
+                        attrs: {
+                          id: group.id,
+                          name: "checked_groups",
+                          type: "checkbox"
+                        },
+                        domProps: {
+                          value: group.id,
+                          checked: Array.isArray(_vm.checkedGroups)
+                            ? _vm._i(_vm.checkedGroups, group.id) > -1
+                            : _vm.checkedGroups
+                        },
+                        on: {
+                          change: function($event) {
+                            var $$a = _vm.checkedGroups,
+                              $$el = $event.target,
+                              $$c = $$el.checked ? true : false
+                            if (Array.isArray($$a)) {
+                              var $$v = group.id,
+                                $$i = _vm._i($$a, $$v)
+                              if ($$el.checked) {
+                                $$i < 0 &&
+                                  (_vm.checkedGroups = $$a.concat([$$v]))
+                              } else {
+                                $$i > -1 &&
+                                  (_vm.checkedGroups = $$a
+                                    .slice(0, $$i)
+                                    .concat($$a.slice($$i + 1)))
+                              }
+                            } else {
+                              _vm.checkedGroups = $$c
+                            }
+                          }
+                        }
+                      })
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(group.name))]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(group.date_created))]),
+                  _vm._v(" "),
+                  _c(
+                    "td",
+                    [
+                      _c(
+                        "router-link",
+                        {
+                          staticClass: "btn btn-primary",
+                          attrs: { to: "group_message" }
+                        },
+                        [_vm._v("Send Message")]
+                      )
+                    ],
+                    1
+                  )
+                ])
+              }),
+              0
+            )
+          ]),
+          _vm._v(" "),
+          _c("hr"),
+          _vm._v(" "),
+          _vm.action === "send_message" && _vm.checkedGroups.length
+            ? _c("div", { staticClass: "row my-3" }, [
+                _c("div", { staticClass: "col-lg-6 offset-3" }, [
+                  _c("label", { attrs: { for: "message_body" } }, [
+                    _vm._v("Message")
+                  ]),
+                  _vm._v(" "),
+                  _c("textarea", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.message_body,
+                        expression: "message_body"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: {
+                      name: "message_body",
+                      id: "message_body",
+                      rows: "5",
+                      placeholder: "Compose Message"
+                    },
+                    domProps: { value: _vm.message_body },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.message_body = $event.target.value
+                      }
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-primary btn-block mt-3",
+                      on: { click: _vm.sendGroupSms }
+                    },
+                    [_vm._v("Send")]
+                  )
+                ])
+              ])
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.action === "add_contacts" && _vm.checkedGroups.length
+            ? _c("div", { staticClass: "my-3" }, [
+                _c("p", { staticClass: "h5" }, [
+                  _vm._v("Select Contacts to Add")
+                ]),
+                _vm._v(" "),
+                _c("table", { staticClass: "table table-bordered" }, [
+                  _vm._m(2),
+                  _vm._v(" "),
+                  _c(
+                    "tbody",
+                    _vm._l(_vm.contacts, function(contact, i) {
+                      return _c("tr", { key: i + "-" + contact.id }, [
+                        _c("td", [
+                          _c("div", { staticClass: "form-check text-center" }, [
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.checkedContacts,
+                                  expression: "checkedContacts"
+                                }
+                              ],
+                              attrs: {
+                                id: contact.id,
+                                name: "checked_contacts",
+                                type: "checkbox"
+                              },
+                              domProps: {
+                                value:
+                                  _vm.action === "send_message"
+                                    ? contact.phone_number
+                                    : contact.id,
+                                checked: Array.isArray(_vm.checkedContacts)
+                                  ? _vm._i(
+                                      _vm.checkedContacts,
+                                      _vm.action === "send_message"
+                                        ? contact.phone_number
+                                        : contact.id
+                                    ) > -1
+                                  : _vm.checkedContacts
+                              },
+                              on: {
+                                change: function($event) {
+                                  var $$a = _vm.checkedContacts,
+                                    $$el = $event.target,
+                                    $$c = $$el.checked ? true : false
+                                  if (Array.isArray($$a)) {
+                                    var $$v =
+                                        _vm.action === "send_message"
+                                          ? contact.phone_number
+                                          : contact.id,
+                                      $$i = _vm._i($$a, $$v)
+                                    if ($$el.checked) {
+                                      $$i < 0 &&
+                                        (_vm.checkedContacts = $$a.concat([
+                                          $$v
+                                        ]))
+                                    } else {
+                                      $$i > -1 &&
+                                        (_vm.checkedContacts = $$a
+                                          .slice(0, $$i)
+                                          .concat($$a.slice($$i + 1)))
+                                    }
+                                  } else {
+                                    _vm.checkedContacts = $$c
+                                  }
+                                }
+                              }
+                            })
+                          ])
+                        ]),
+                        _vm._v(" "),
+                        _c("td", [_vm._v(_vm._s(contact.name))]),
+                        _vm._v(" "),
+                        _c("td", [_vm._v(_vm._s(contact.phone_number))]),
+                        _vm._v(" "),
+                        _c("td", [_vm._v(_vm._s(contact.date_created))])
+                      ])
+                    }),
+                    0
+                  )
+                ]),
+                _vm._v(" "),
+                _vm.checkedContacts.length
+                  ? _c("div", { staticClass: "form-group" }, [
+                      _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-primary btn-block",
+                          on: { click: _vm.attachContactsGroups }
+                        },
+                        [_vm._v("Add Contacts")]
+                      )
+                    ])
+                  : _vm._e()
+              ])
+            : _vm._e()
+        ])
+      : _vm._e()
+  ])
 }
 var staticRenderFns = [
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-12" }, [
+      _c("label", { attrs: { for: "action" } }, [
+        _vm._v("Choose Action, then select Groups to Apply")
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
     return _c("thead", [
       _c("tr", [
+        _c("th", [_vm._v("Select")]),
+        _vm._v(" "),
         _c("th", [_vm._v("Name")]),
         _vm._v(" "),
         _c("th", [_vm._v("Date Created")]),
         _vm._v(" "),
         _c("th", [_vm._v("Action")])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", [
+        _c("th", [_vm._v("Select")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Name")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Phone Number")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Date Created")])
       ])
     ])
   }
@@ -54312,6 +54997,75 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ContactForm_vue_vue_type_template_id_76db242e___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ContactForm_vue_vue_type_template_id_76db242e___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/ContactList.vue":
+/*!*************************************************!*\
+  !*** ./resources/js/components/ContactList.vue ***!
+  \*************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _ContactList_vue_vue_type_template_id_0ee8d67a___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ContactList.vue?vue&type=template&id=0ee8d67a& */ "./resources/js/components/ContactList.vue?vue&type=template&id=0ee8d67a&");
+/* harmony import */ var _ContactList_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ContactList.vue?vue&type=script&lang=js& */ "./resources/js/components/ContactList.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _ContactList_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _ContactList_vue_vue_type_template_id_0ee8d67a___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _ContactList_vue_vue_type_template_id_0ee8d67a___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/ContactList.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/ContactList.vue?vue&type=script&lang=js&":
+/*!**************************************************************************!*\
+  !*** ./resources/js/components/ContactList.vue?vue&type=script&lang=js& ***!
+  \**************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ContactList_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./ContactList.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ContactList.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ContactList_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/ContactList.vue?vue&type=template&id=0ee8d67a&":
+/*!********************************************************************************!*\
+  !*** ./resources/js/components/ContactList.vue?vue&type=template&id=0ee8d67a& ***!
+  \********************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ContactList_vue_vue_type_template_id_0ee8d67a___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./ContactList.vue?vue&type=template&id=0ee8d67a& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ContactList.vue?vue&type=template&id=0ee8d67a&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ContactList_vue_vue_type_template_id_0ee8d67a___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ContactList_vue_vue_type_template_id_0ee8d67a___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

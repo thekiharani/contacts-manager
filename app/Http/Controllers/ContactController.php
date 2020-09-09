@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Contact;
+use App\Group;
 use App\Http\Resources\ContactResource;
 use App\Services\MessageService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 
 class ContactController extends Controller
@@ -13,13 +15,25 @@ class ContactController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     * @return \Illuminate\Http\JsonResponse
      */
     public function index()
     {
+        // Find all selected gropus
+        $groups = Group::find([1]);
+        $contacts = [];
+        foreach ($groups as $group) {
+            // find contacts in each group
+            $contacts[] = $group->contacts()->pluck('phone_number');
+        }
+        // merge the group contacts arrays
+        $merged = collect($contacts)->collapse()->toArray();
+        // remove the duplicate contacts: one contact can belong to more than one group
+        $contacts = array_merge(array_unique($merged), array());
+        return response()->json(['merged' => $merged, 'contacts' => $contacts]);
 //        $rest = '+254' . substr("0728656735", 1);
-        $rest = substr("+254728656735", -9);
-        echo $rest;
+//        $rest = substr("+254728656735", -9);
+//        echo $rest;
 //        $messageService = new MessageService;
 //        $messageService->sendSMS(["0728656735", "0706318147"], "We are testing the messages!\n^Joe Gitonga");
 //        $contacts = Auth::user()->contacts;

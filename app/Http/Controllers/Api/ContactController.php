@@ -84,6 +84,6 @@ class ContactController extends Controller
     {
         $this->authorize('delete', $contact);
         $contact->delete();
-        return response()->json(['message' => 'Contact Deleted'], 204);
+        return response()->json(['message' => 'Contact Deleted'], 200);
     }
 }

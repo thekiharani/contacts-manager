@@ -2,14 +2,17 @@
     <div class="form-group">
         <p class="h4">{{ title }}</p>
         <form action="#" class="form-row" @submit.prevent="formAction">
-            <div class="col-lg-5">
+            <div class="col-lg-4">
                 <input type="text" name="name" id="name" class="form-control" placeholder="Full Name" v-model="formData.name" />
             </div>
-            <div class="col-lg-5">
+            <div class="col-lg-4">
                 <input type="text" name="description" id="description" class="form-control" placeholder="Optional Group description" v-model="formData.description" />
             </div>
             <div class="col-lg-2">
                 <button type="submit" class="btn btn-primary btn-block">Save</button>
+            </div>
+            <div class="col-lg-2">
+                <button type="button" class="btn btn-danger btn-block" @click="cancel">Cancel</button>
             </div>
         </form>
     </div>
@@ -20,6 +23,9 @@
         name: "GroupForm",
         props: {
             formAction: {
+                type: Function
+            },
+            cancel: {
                 type: Function
             },
             formData: {

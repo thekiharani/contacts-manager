@@ -79,6 +79,6 @@ class GroupController extends Controller
     {
         $this->authorize('delete', $group);
         $group->delete();
-        return response()->json(['message' => 'Group Deleted'], 204);
+        return response()->json(['message' => 'Group Deleted'], 200);
     }
 }

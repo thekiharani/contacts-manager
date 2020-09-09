@@ -5,7 +5,7 @@
         <hr>
         <!-- Show contact creation form -->
         <div v-if="store || !contacts.length">
-            <ContactForm :formAction="storeContact" :cancel="() => store = false" :formData="formData" title="New Contact" />
+            <ContactForm :formAction="storeContact" :cancel="() => {store = false; action = ''}" :formData="formData" title="New Contact" />
         </div>
         <div v-if="contacts.length">
             <div class="form-group" v-if="!store">
@@ -22,7 +22,7 @@
                         </select>
                     </div>
                     <div class="col-lg-3" v-if="action === 'delete' && checkedContacts.length" >
-                        <button class="btn btn-danger btn-block">Delete</button>
+                        <button class="btn btn-danger btn-block" @click="deleteContacts">Delete</button>
                     </div>
                     <div class="col-lg-3" v-if="action === '' || !checkedContacts.length">
                         <button class="btn btn-primary px-3" @click="() => store = true">Add Contact</button>
@@ -72,7 +72,7 @@
                         <option v-for="(group, i) in groups" :key="`${i}-${group.id}`" v-bind:value="group.id">{{ group.name }}</option>
                     </select>
 
-                    <button class="btn btn-primary btn-block mt-3">Add Contacts</button>
+                    <button class="btn btn-primary btn-block mt-3" @click="attachGroupContacts">Add Contacts</button>
                 </div>
             </div>
         </div>
@@ -85,6 +85,7 @@
 
 <script>
     import ContactForm from "../components/ContactForm";
+    import ContactList from "../components/ContactList";
     export default {
         components: {ContactForm},
         data() {
@@ -113,12 +114,14 @@
                     this.contacts = response.data;
                 })
             },
+
             getGroups() {
                 axios.get('/api/groups').then(response => {
                     console.log(response);
                     this.groups = response.data;
                 })
             },
+
             storeContact() {
                 axios.post('/api/contacts', this.formData).then(response => {
                     console.log(response);
@@ -128,14 +131,35 @@
                     this.store =false;
                 });
             },
+
             sendPersonalSms() {
-                axios.post('/api/personal_sms', {'contacts': this.checkedContacts, 'message': this.message_body}).then(response => {
+                axios.post('/api/personal_sms', {'group': this.group, 'message': this.message_body}).then(response => {
                     console.log(response);
                     this.action = '';
                     this.checkedContacts = [];
                     this.message_body = '';
                 });
             },
+
+            attachGroupContacts() {
+                axios.post('/api/group_contacts', {'contacts': this.checkedContacts, 'group': this.group}).then(response => {
+                    console.log(response);
+                    this.action = '';
+                    this.checkedContacts = [];
+                    this.group = '';
+                });
+            },
+
+            deleteContacts() {
+                // Can't do delete since an array is passed as a param
+                axios.post('/api/delete_contacts', {'contacts': this.checkedContacts}).then(response => {
+                    console.log(response);
+                    this.action = '';
+                    this.checkedContacts = [];
+                    this.getContacts();
+                });
+            },
+
             getAction(e) {
                 this.checkedContacts = [];
                 this.action = e.target.value;
