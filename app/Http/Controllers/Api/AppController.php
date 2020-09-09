@@ -7,6 +7,7 @@ use App\Group;
 use App\Http\Controllers\Controller;
 use App\Services\MessageService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class AppController extends Controller
 {
@@ -21,8 +22,8 @@ class AppController extends Controller
     {
         $contacts = $request->contacts;
         $message = $request->message;
-        $this->messageService->sendSMS($contacts, $message);
-        return response()->json(['message' => 'messages sent successfully'], 200);
+        $res = $this->messageService->sendSMS($contacts, $message);
+        return response()->json(['message' => $res], 200);
     }
 
     // send sms to group members
@@ -39,8 +40,8 @@ class AppController extends Controller
         // remove the duplicate contacts: one contact can belong to more than one group
         $contacts = array_merge(array_unique($merged), array());
         $message = $request->message;
-        $this->messageService->sendSMS($contacts, $message);
-        return response()->json(['message' => 'messages sent successfully', 'contacts' => $contacts, 'sms' => $message], 200);
+        $res = $this->messageService->sendSMS($contacts, $message);
+        return response()->json(['message' => $res], 200);
     }
 
     // Add users to the group
@@ -79,5 +80,12 @@ class AppController extends Controller
         $group_ids = $request->groups;
         Group::whereIn('id', $group_ids)->delete();
         return response()->json(['message' => 'Groups deleted'], 200);
+    }
+
+    public function smsCallback(Request $request)
+    {
+        $payload =  file_get_contents('php://input');
+        Log::info($payload);
+        return $payload;
     }
 }

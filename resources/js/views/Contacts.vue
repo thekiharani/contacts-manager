@@ -85,7 +85,6 @@
 
 <script>
     import ContactForm from "../components/ContactForm";
-    import ContactList from "../components/ContactList";
     export default {
         components: {ContactForm},
         data() {
@@ -133,7 +132,7 @@
             },
 
             sendPersonalSms() {
-                axios.post('/api/personal_sms', {'group': this.group, 'message': this.message_body}).then(response => {
+                axios.post('/api/personal_sms', {'contacts': this.checkedContacts, 'message': this.message_body}).then(response => {
                     console.log(response);
                     this.action = '';
                     this.checkedContacts = [];

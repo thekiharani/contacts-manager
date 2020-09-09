@@ -19,6 +19,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::get('contacts/list', 'Api\ContactController@index')->name('my_contacts');
+Route::post('sms_callback', 'Api\AppController@smsCallback')->name('sms_callback');
 
 Route::namespace('Api')->middleware('auth:sanctum')->name('api.')->group(function () {
     Route::apiResource('contacts', 'ContactController');

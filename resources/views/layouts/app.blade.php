@@ -40,9 +40,6 @@
                             <li class="nav-item">
                                 <router-link class="nav-link"  to="groups">Groups</router-link>
                             </li>
-                            <li class="nav-item">
-                                <router-link class="nav-link"  to="personal_message">Personal Message</router-link>
-                            </li>
                         @endauth
                     </ul>
 

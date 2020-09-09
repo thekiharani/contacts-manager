@@ -150,7 +150,7 @@
                 axios.post('/api/group_sms', {'groups': this.checkedGroups, 'message': this.message_body}).then(response => {
                     console.log(response);
                     this.action = '';
-                    this.checkedContacts = [];
+                    this.checkedGroups = [];
                     this.message_body = '';
                 });
             },
