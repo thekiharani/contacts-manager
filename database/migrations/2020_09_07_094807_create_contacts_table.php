@@ -17,10 +17,9 @@ class CreateContactsTable extends Migration
             $table->id();
             $table->foreignId('user_id');
             $table->string('name');
-            $table->string('phone_number')->unique();
+            $table->string('phone_number');
             $table->timestamps();
 
-            $table->unique(['user_id', 'phone_number']);
             $table->foreign('user_id')
                     ->references('id')
                     ->on('users')

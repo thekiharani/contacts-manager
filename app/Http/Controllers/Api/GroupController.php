@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Group;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\GroupResource;
 use Illuminate\Http\Request;
 
 class GroupController extends Controller
@@ -11,11 +12,13 @@ class GroupController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $groups = $request->user()->groups;
+        return GroupResource::collection($groups);
     }
 
     /**
@@ -33,12 +36,13 @@ class GroupController extends Controller
      * Display the specified resource.
      *
      * @param \App\Group $group
-     * @return \Illuminate\Http\Response
+     * @return GroupResource
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function show(Group $group)
     {
         $this->authorize('view', $group);
+        return new GroupResource($group);
     }
 
     /**

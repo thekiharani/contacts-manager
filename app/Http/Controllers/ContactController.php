@@ -3,18 +3,27 @@
 namespace App\Http\Controllers;
 
 use App\Contact;
+use App\Http\Resources\ContactResource;
+use App\Services\MessageService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ContactController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
     public function index()
     {
-        //
+//        $rest = '+254' . substr("0728656735", 1);
+        $rest = substr("+254728656735", -9);
+        echo $rest;
+//        $messageService = new MessageService;
+//        $messageService->sendSMS(["0728656735", "0706318147"], "We are testing the messages!\n^Joe Gitonga");
+//        $contacts = Auth::user()->contacts;
+//        return ContactResource::collection($contacts);
     }
 
     /**

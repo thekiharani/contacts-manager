@@ -20,7 +20,6 @@ class CreateGroupsTable extends Migration
             $table->text('description')->nullable();
             $table->timestamps();
 
-            $table->unique(['user_id', 'name']);
             $table->foreign('user_id')
                     ->references('id')
                     ->on('users')

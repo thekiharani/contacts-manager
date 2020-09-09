@@ -1,14 +1,12 @@
 <template>
     <div class="container">
-        <h1>App Component</h1>
-
         <router-view></router-view>
     </div>
 </template>
 
 <script>
-    import Contacts from "./components/Contacts";
-    import Home from "./components/Home";
+    import Contacts from "./views/Contacts";
+    import Home from "./views/Groups";
 
     export default {
         name: 'App',
