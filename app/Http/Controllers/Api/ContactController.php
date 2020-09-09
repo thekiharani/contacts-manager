@@ -39,7 +39,6 @@ class ContactController extends Controller
         $contact = new Contact($validated_data);
         Auth::user()->contacts()->save($contact);
         return response()->json(['message' => 'Contact Created', 'contact' => new ContactResource($contact)], 201);
-
     }
 
     /**

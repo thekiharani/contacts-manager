@@ -23,4 +23,5 @@ Route::get('contacts/list', 'Api\ContactController@index')->name('my_contacts');
 Route::namespace('Api')->middleware('auth:sanctum')->name('api.')->group(function () {
     Route::apiResource('contacts', 'ContactController');
     Route::apiResource('groups', 'GroupController');
+    Route::post('personal_sms', 'AppController@sendPersonalText')->name('personal_sms');
 });

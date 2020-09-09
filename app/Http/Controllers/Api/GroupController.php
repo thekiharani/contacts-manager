@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Api;
 
 use App\Group;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\GroupRequest;
 use App\Http\Resources\GroupResource;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class GroupController extends Controller
 {
@@ -17,7 +19,7 @@ class GroupController extends Controller
      */
     public function index(Request $request)
     {
-        $groups = $request->user()->groups;
+        $groups = $request->user()->groups()->orderBy('updated_at', 'DESC')->get();
         return GroupResource::collection($groups);
     }
 
@@ -25,11 +27,15 @@ class GroupController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function store(Request $request)
+    public function store(GroupRequest $request)
     {
-        //
+        // Validation done via GroupRequest
+        $validated_data = $request->validated();
+        $group = new Group($validated_data);
+        Auth::user()->groups()->save($group);
+        return response()->json(['message' => 'Group Created', 'group' => new GroupResource($group)], 201);
     }
 
     /**
@@ -50,23 +56,29 @@ class GroupController extends Controller
      *
      * @param \Illuminate\Http\Request $request
      * @param \App\Group $group
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function update(Request $request, Group $group)
     {
         $this->authorize('update', $group);
+        // Validation done via GroupRequest
+        $validated_data = $request->validated();
+        $group->update($validated_data);
+        return response()->json(['message' => 'Group Updated', 'group' => new GroupResource($group)], 200);
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param \App\Group $group
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function destroy(Group $group)
     {
         $this->authorize('delete', $group);
+        $group->delete();
+        return response()->json(['message' => 'Group Deleted'], 204);
     }
 }
