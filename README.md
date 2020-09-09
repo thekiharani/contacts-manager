@@ -53,3 +53,4 @@ __Please ensure that you have two contacts with the phone number given in point 
 - Add contact and group editing functionality to the UI (it exists in the backed-end API)
 - Provide an interface for the users to schedule more dynamic messages.
 - Use queues and jobs dispatching in SMS sending.
+- Code Documentation
