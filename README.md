@@ -24,6 +24,7 @@ SMSs can be sent instantly or scheduled. Instant SMS option is fully covered in 
 The Scheduling is achieved through a custom command for [Laravel Scheduler](https://laravel.com/docs/8.x/scheduling#introduction). The Scheduling achieves the following: 
 1. Send SMS to two hypothetical system admins every day at 11:45 PM, reminding them to reboot the server at 12:00 AM (console command: `php artisan reminder:rebootserver`). In order to replicate this, you must have two contacts with the phone numbers `+254711223344` and `+254722334455` respectively. The phone numbers are used to query the database. 
 2. Send SMS to the hypothetical `Employees` group members every day at 12:45 PM, notifying them of the network interruption between 1-1:30 PM (console command: `php artisan notice:serviceinterruption`). In order to replicate this, you must have a group by the name `Employees`, and with some members. The group name is used to query the database.
+__For testing with a different time scheduling, you can edit this in: `app\Console\Kernel.php lines 28 and 33`__
 
 The scheduled sms are meant to run automatically on a live server using cron jobs. However, for local development, the schedule has to be triggered manually by the command: `php artisan schedule:run`. Maybe a containerized setup can be made to mimic live server and duplicated across devs ([Docker](https://dev.to/lostdesign/how-to-run-laravel-in-docker-4e6o) or [Homestead](https://laravel.com/docs/8.x/homestead)).
 
