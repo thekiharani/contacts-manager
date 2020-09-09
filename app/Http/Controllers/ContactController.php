@@ -19,25 +19,9 @@ class ContactController extends Controller
      */
     public function index()
     {
-        // Find all selected gropus
-        $groups = Group::find([1]);
-        $contacts = [];
-        foreach ($groups as $group) {
-            // find contacts in each group
-            $contacts[] = $group->contacts()->pluck('phone_number');
-        }
-        // merge the group contacts arrays
-        $merged = collect($contacts)->collapse()->toArray();
-        // remove the duplicate contacts: one contact can belong to more than one group
-        $contacts = array_merge(array_unique($merged), array());
-        return response()->json(['merged' => $merged, 'contacts' => $contacts]);
-//        $rest = '+254' . substr("0728656735", 1);
-//        $rest = substr("+254728656735", -9);
-//        echo $rest;
-//        $messageService = new MessageService;
-//        $messageService->sendSMS(["0728656735", "0706318147"], "We are testing the messages!\n^Joe Gitonga");
-//        $contacts = Auth::user()->contacts;
-//        return ContactResource::collection($contacts);
+        // $contacts = Group::where('name', 'Employees')->first()->contacts()->pluck('phone_number');
+        $contacts = Contact::whereIn('phone_number', ['+254711223344', '+254722334455'])->pluck('phone_number')->toArray();
+        return $contacts;
     }
 
     /**

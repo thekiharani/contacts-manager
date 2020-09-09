@@ -24,7 +24,15 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
+         $schedule->command('reminder:rebootserver')
+                    ->dailyAt('23:45')
+                    ->timezone('Africa/Nairobi')
+                    ->withoutOverlapping();
+
+         $schedule->command('notice:serviceinterruption')
+                    ->dailyAt('12:45')
+                    ->timezone('Africa/Nairobi')
+                    ->withoutOverlapping();
     }
 
     /**
