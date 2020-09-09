@@ -14,10 +14,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
 Route::get('contacts/list', 'Api\ContactController@index')->name('my_contacts');
 Route::post('sms_callback', 'Api\AppController@smsCallback')->name('sms_callback');
 
